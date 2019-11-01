@@ -1,0 +1,6 @@
+node_modules/**
+**/node_modules
+**/docs
+**/middleware/404.js
+**/middleware/500.js
+**/middleware.test.js
