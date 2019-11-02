@@ -9,7 +9,8 @@
     "test-watch": "jest --watchAll",
     "test": "jest --verbose",
     "setup-roles": "node src/auth/setup-roles.js",
-    "lint": "eslint '**/*.js' --fix"
+    "lint": "eslint '**/*.js' --fix",
+    "jsdoc": "jsdoc -c ./docs/config/jsdoc.config.json"
   },
   "jest": {
     "testEnvironment": "node"
