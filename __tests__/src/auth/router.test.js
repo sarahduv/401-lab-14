@@ -3,7 +3,6 @@
 process.env.SECRET = 'test';
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const setupRoles = require('../../../src/auth/setup-roles-common.js');
 const supergoose = require('../../supergoose.js');
 // eslint-disable-next-line no-unused-vars
