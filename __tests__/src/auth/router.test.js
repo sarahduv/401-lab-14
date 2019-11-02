@@ -3,6 +3,7 @@
 process.env.SECRET = 'test';
 
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const setupRoles = require('../../../src/auth/setup-roles-common.js');
 const supergoose = require('../../supergoose.js');
 // eslint-disable-next-line no-unused-vars
@@ -76,8 +77,72 @@ describe('Auth Router', () => {
           });
       });
 
+      it('can sign in to public stuff', () => {
+        return mockRequest.get('/public-stuff')
+          .expect(200);
+      });
+
+      it('can sign in to hidden stuff', () => {
+        return mockRequest.get('/hidden-stuff')
+          .auth(users[userType].username, users[userType].password)
+          .expect(200);
+      });
+
+      it('can sign in to something to read', () => {
+        return mockRequest.get('/something-to-read')
+          .auth(users[userType].username, users[userType].password)
+          .expect(200);
+      });
+
     });
     
+  });
+
+  it('can sign in to create a thing', () => {
+    return mockRequest.post('/create-a-thing')
+      .auth(users.admin.username, users.admin.password)
+      .expect(200);
+  });
+
+  it('can sign in to update a thing', () => {
+    return mockRequest.put('/update')
+      .auth(users.admin.username, users.admin.password)
+      .expect(200);
+  });
+
+  it('can sign in to delete a thing', () => {
+    return mockRequest.delete('/bye-bye')
+      .auth(users.admin.username, users.admin.password)
+      .expect(200);
+  });
+
+  it('will be unable to access this route because superuser role does not exist', () => {
+    return mockRequest.post('/router-get-everything')
+      .auth(users.admin.username, users.admin.password)
+      .expect(500);
+  });
+
+  it('Testing the oAuth static function from email', async () => {
+    const admin = await new Users({
+      username: 'adminTwo', 
+      password: 'password', 
+      email: 'admin@admin.com', 
+      role: 'admin',
+    }).save();
+    const admin2 = await Users.createFromOauth('admin@admin.com');
+    expect(admin2.username).toEqual(admin.username);
+  });
+
+  it('Testing the authenticate basic static function from email', async () => {
+    const admin = await new Users({
+      username: 'adminThree', 
+      password: 'password', 
+      email: 'admin3@admin.com', 
+      role: 'admin',
+    }).save();
+    const hashedPass = 'password';
+    const admin3 = await Users.authenticateBasic({username: 'adminThree', password: hashedPass});
+    expect(admin3.username).toEqual(admin.username);
   });
   
 });

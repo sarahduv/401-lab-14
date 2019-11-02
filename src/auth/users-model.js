@@ -84,6 +84,7 @@ usersSchema.statics.authenticateBasic = function(auth) {
 };
 
 usersSchema.methods.comparePassword = function(password) {
+  console.log('PASSWORD HASH', password, this.password);
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
 };
