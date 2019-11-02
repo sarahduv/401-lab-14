@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('./users-model.js');
+const slog = require('../sarah-logging.js');
 
 module.exports = (required_capability) => {
   
@@ -8,7 +9,7 @@ module.exports = (required_capability) => {
 
     try {
       let [authType, authString] = req.headers.authorization.split(/\s+/);
-
+      slog.log('middleware called headers: ', req.headers.authorization);
       switch (authType.toLowerCase()) {
       case 'basic':
         return _authBasic(authString);
@@ -28,6 +29,7 @@ module.exports = (required_capability) => {
       let bufferString = base64Buffer.toString();    // john:mysecret
       let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
       let auth = {username, password}; // { username:'john', password:'mysecret' }
+      slog.log('auth basic username pass: ', auth);
 
       return User.authenticateBasic(auth)
         .then(user => _authenticate(user))
@@ -43,6 +45,8 @@ module.exports = (required_capability) => {
     }
 
     async function _authenticate(user) {
+      slog.log('authenticate basic called with user: ', user);
+      
       if ( user ) {
         let user_has_capability = false;
         if (!required_capability) {

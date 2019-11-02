@@ -7,8 +7,9 @@
     "start": "node index.js",
     "watch": "nodemon index.js",
     "test-watch": "jest --watchAll",
-    "test": "jest",
-    "setup-roles": "node src/auth/setup-roles.js"
+    "test": "jest --verbose",
+    "setup-roles": "node src/auth/setup-roles.js",
+    "lint": "eslint '**/*.js' --fix"
   },
   "jest": {
     "testEnvironment": "node"

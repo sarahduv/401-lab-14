@@ -3,10 +3,14 @@
 process.env.SECRET = 'test';
 
 const jwt = require('jsonwebtoken');
-
-const Roles = require('../../../src/auth/roles-model.js');
-const server = require('../../../src/app.js').server;
+const setupRoles = require('../../../src/auth/setup-roles-common.js');
 const supergoose = require('../../supergoose.js');
+// eslint-disable-next-line no-unused-vars
+const RoleModel = require('../../../src/auth/roles-model.js');
+// eslint-disable-next-line no-unused-vars
+const Users = require('../../../src/auth/users-model.js');
+const server = require('../../../src/app.js').server;
+
 
 const mockRequest = supergoose.server(server);
 
@@ -18,7 +22,14 @@ let users = {
 
 beforeAll(async (done) => {
   await supergoose.startDB();
-  done()
+
+  // Creating the roles
+  await setupRoles();
+  // Creating the users
+  // const admin = await new Users(users.admin).save();
+  // const editor = await new Users(users.editor).save();
+  // const user = await new Users(users.user).save();
+  done();
 });
 
 

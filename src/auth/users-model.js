@@ -3,7 +3,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+// eslint-disable-next-line no-unused-vars
 const RolesModel = require('./roles-model.js');
+const slog = require('../sarah-logging.js');
 
 const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
@@ -50,6 +52,7 @@ usersSchema.statics.createFromOauth = function(email) {
       if( !user ) { throw new Error('User Not Found'); }
       return user;
     })
+    // eslint-disable-next-line no-unused-vars
     .catch( error => {
       let username = email;
       let password = 'none';
@@ -86,6 +89,7 @@ usersSchema.methods.comparePassword = function(password) {
 };
 
 usersSchema.methods.generateToken = async function(type) {
+  slog.log('Generating token for user with type: ', type);
   const role = await this.getRole();
   let token = {
     id: this._id,
@@ -108,6 +112,7 @@ usersSchema.methods.can = async function(capability) {
 
 usersSchema.methods.getRole = async function() {
   const user = await this.populate('role_doc').execPopulate();
+  slog.log('Populated user with roles: ', user);
   const role = user.role_doc;
   if(role === null) {
     throw new Error('invalid role for user ' + user.username);

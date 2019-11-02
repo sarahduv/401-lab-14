@@ -28,7 +28,8 @@ supergoose.startDB = async () => {
   
   const mongooseOptions = {
     useNewUrlParser:true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true,
   };
   
   await mongoose.connect(mongoUri, mongooseOptions, (err) => {

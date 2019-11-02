@@ -3,6 +3,7 @@
 process.env.SECRET="test";
 
 const {startDB,stopDB} = require('../../supergoose.js');
+const setupRoles = require('../../../src/auth/setup-roles-common.js');
 const auth = require('../../../src/auth/middleware.js');
 const Users = require('../../../src/auth/users-model.js');
 const Roles = require('../../../src/auth/roles-model.js');
@@ -15,6 +16,10 @@ let users = {
 
 beforeAll(async (done) => {
   await startDB();
+
+  // Creating the roles
+  await setupRoles();
+  // Creating the users
   const admin = await new Users(users.admin).save();
   const editor = await new Users(users.editor).save();
   const user = await new Users(users.user).save();

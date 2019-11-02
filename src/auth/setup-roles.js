@@ -12,31 +12,10 @@ const options = {
 mongoose.connect(process.env.MONGODB_URI, options);
 console.log('Connected to mongo');
 
-const RoleModel = require('./roles-model.js');
-
-async function doWork() {
-  // Clear the collection
-  RoleModel.deleteMany({});
-
-  // Insert our roles and their capabilities
-  RoleModel.insertMany([
-    { 
-      role: 'admin',
-      capabilities: ['create','read','update','delete'], 
-    },
-    { 
-      role: 'editor',
-      capabilities: ['create', 'read', 'update'], 
-    },
-    { 
-      role: 'user',
-      capabilities: ['read'], 
-    },
-  ]);
-}
+const fn = require('./setup-roles-common.js');
 
 console.log('Setup roles started...');
-doWork().then(() => {
+fn().then(() => {
   console.log('Setup roled finished');
 }).catch(err => {
   console.log('Setup roles failed: ', err);
